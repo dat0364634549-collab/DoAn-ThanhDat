@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thông Tin Người Dùng - Thời Trang của Đạt</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=admin-menu-fix-20260531">
+    <style>
+          .cart-count {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid white; /* Tùy chọn viền */
+}
+
+        .profile-card {
+            margin-top: 20px;
+            background: #ffffff;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-card .profile-header {
+            text-align: center;
+            padding-top: 20px;
+        }
+
+        .profile-card .profile-header h2 {
+            font-size: 24px;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .profile-card .profile-header p {
+            font-size: 16px;
+            color: #777;
+        }
+
+        .profile-card .profile-body {
+            margin-top: 20px;
+        }
+
+        .profile-card .profile-body .info-group {
+            margin-bottom: 15px;
+        }
+
+        .profile-card .profile-body .info-group label {
+            font-weight: bold;
+            display: block;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .profile-card .profile-body .info-group p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .profile-card .action-buttons {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .profile-card .action-buttons a {
+            margin: 5px;
+            display: inline-block;
+        }
+
+        .profile-card .action-buttons .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        footer {
+            margin-top: 50px;
+            background: #343a40;
+            color: #ffffff;
+            text-align: center;
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a class="logo" href="index.html">
+            <img src="images/logo.png?v=td-new-logo-20260530" alt="TD Logo">
+        </a>
+        <div class="menu-and-search">
+            <div class="nav-wrap">
+                <nav class="menu">
+                    <ul>
+                        <li><a href="index.html">Trang chủ</a></li>
+                        <li><a href="products.html">Sản phẩm</a></li>
+                        <li><a href="contact.html">Liên hệ</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Tìm kiếm sản phẩm..." autocomplete="off">
+                <button id="searchBtn"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+        <div class="icons" style="position: relative;">
+            <a href="#" id="cartButton" style="position: relative; text-decoration: none; color: inherit;">
+                <i class="fas fa-shopping-cart" style="position: relative;">
+                    <span class="cart-count">0</span>
+                </i>
+            </a>
+            <button class="user-button" id="userButton">
+                <i class="fas fa-user"></i>
+            </button>
+            <div class="user-dropdown" id="userDropdown">
+                <a href="login.html">Đăng nhập</a>
+                <a href="contact.html">Liên hệ</a>
+                <a href="user.html">Thông tin người dùng</a>
+                <a href="admin.html" class="admin-menu-link" style="display: none;">Quản trị hệ thống</a>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <div class="profile-card">
+            <div class="profile-header">
+                <h2 id="userName">Người Dùng</h2>
+                <p id="userEmail">Chưa đăng nhập</p>
+            </div>
+
+            <div class="profile-body">
+                <div class="info-group">
+                    <label>Họ và Tên:</label>
+                    <p id="displayName">--</p>
+                </div>
+                <div class="info-group">
+                    <label>Email:</label>
+                    <p id="displayEmail">--</p>
+                </div>
+                <div class="info-group">
+                    <label>Số Điện Thoại:</label>
+                    <p id="displayPhone">--</p>
+                </div>
+                <div class="info-group">
+                    <label>Trạng Thái:</label>
+                    <p id="loginStatus">Chưa đăng nhập</p>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="loginBtn" class="btn btn-primary" onclick="window.location.href='login.html'" style="display: none;">Đăng Nhập</button>
+                <button id="adminPanelBtn" class="btn btn-dark admin-profile-btn" onclick="window.location.href='admin.html'" style="display: none;">Vào quản trị hệ thống</button>
+                <button id="logoutBtn" class="btn btn-danger" onclick="handleLogout()" style="display: none;">Đăng Xuất</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-wrapper">
+            <div class="footer-section about">
+                <h2>Thời Trang của ĐẠT</h2>
+                <p>Cửa hàng thời trang đẳng cấp, mang đến phong cách và sự thoải mái. Khám phá bộ sưu tập quần áo thời thượng dành riêng cho bạn.</p>
+            </div>
+            <div class="footer-section links">
+                <h2>Liên kết nhanh</h2>
+                <ul>
+                    <li><a href="aothun.html">Áo Thun</a></li>
+                    <li><a href="vay.html">Váy</a></li>
+                    <li><a href="quanthun.html">Quần Thun</a></li>
+                    <li><a href="aokhoac.html">Áo Khoác</a></li>
+                    <li><a href="contact.html">Liên Hệ</a></li>
+                </ul>
+            </div>
+            <div class="footer-section contact">
+                <h2>Thông tin liên hệ</h2>
+                <p><i class="fas fa-map-marker-alt"></i> 123 Đường Thời Trang, Quận 1, TP. HCM</p>
+                <p><i class="fas fa-phone"></i> <a href="tel:+84348588823">+84348588823</a></p>
+                <p><i class="fas fa-envelope"></i> <a href="mailto:dat0364634549@gmail.com">dat0364634549@gmail.com</a></p>
+            </div>
+            <div class="footer-section social">
+                <h2>Kết nối với chúng tôi</h2>
+                <div class="social-icons">
+                    <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="https://youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Popup Giỏ Hàng -->
+    <div class="cart-popup-overlay" id="cartPopup">
+        <div class="cart-popup">
+            <div class="cart-popup-header">
+                <h2 class="cart-popup-title">Giỏ Hàng</h2>
+                <button class="cart-popup-close" id="cartPopupClose">&times;</button>
+            </div>
+            <div class="cart-popup-content" id="cartPopupContent">
+                <!-- Nội dung giỏ hàng sẽ được thêm bằng JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/cart-popup.js"></script>
+    <script src="js/admin-menu.js?v=admin-menu-fix-20260531"></script>
+    <script>
+        const userButton = document.getElementById('userButton');
+        const userDropdown = document.getElementById('userDropdown');
+
+        if (userButton && userDropdown) {
+            userButton.addEventListener('mouseover', () => {
+                userDropdown.style.display = 'block';
+            });
+
+            userDropdown.addEventListener('mouseleave', () => {
+                userDropdown.style.display = 'none';
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!userButton.contains(event.target) && !userDropdown.contains(event.target)) {
+                    userDropdown.style.display = 'none';
+                }
+            });
+        }
+
+        function loadUserInfo() {
+            const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+            
+            if (currentUser) {
+                document.getElementById('userName').textContent = currentUser.name;
+                document.getElementById('userEmail').textContent = currentUser.email;
+                document.getElementById('displayName').textContent = currentUser.name;
+                document.getElementById('displayEmail').textContent = currentUser.email;
+                document.getElementById('displayPhone').textContent = currentUser.phone || '--';
+                document.getElementById('loginStatus').textContent = 'Đã đăng nhập';
+                document.getElementById('loginStatus').style.color = '#28a745';
+                
+                document.getElementById('loginBtn').style.display = 'none';
+                document.getElementById('logoutBtn').style.display = 'inline-block';
+                const isAdminAccount = currentUser.role === 'admin' || currentUser.email === 'admin@gmail.com';
+                if (isAdminAccount) {
+                    localStorage.setItem('adminUser', JSON.stringify({ ...currentUser, role: 'admin' }));
+                    document.getElementById('adminPanelBtn').style.display = 'inline-block';
+                } else {
+                    document.getElementById('adminPanelBtn').style.display = 'none';
+                }
+            } else {
+                document.getElementById('userName').textContent = 'Người Dùng';
+                document.getElementById('userEmail').textContent = 'Chưa đăng nhập';
+                document.getElementById('displayName').textContent = '--';
+                document.getElementById('displayEmail').textContent = '--';
+                document.getElementById('displayPhone').textContent = '--';
+                document.getElementById('loginStatus').textContent = 'Chưa đăng nhập';
+                document.getElementById('loginStatus').style.color = '#dc3545';
+                
+                document.getElementById('loginBtn').style.display = 'inline-block';
+                document.getElementById('logoutBtn').style.display = 'none';
+                document.getElementById('adminPanelBtn').style.display = 'none';
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+                localStorage.removeItem('currentUser');
+                localStorage.removeItem('adminUser');
+                alert('Đã đăng xuất thành công!');
+                loadUserInfo();
+            }
+        }
+
+        loadUserInfo();
+
+        // Chức năng tìm kiếm
+        const searchBtn = document.getElementById('searchBtn');
+        const searchInput = document.getElementById('searchInput');
+
+        function performSearch() {
+            const query = searchInput.value.trim();
+            if (query) {
+                window.location.href = `products.html?search=${encodeURIComponent(query)}`;
+            }
+        }
+
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    </script>
+    <script src="js/search-dropdown.js"></script>
+</body>
+</html>

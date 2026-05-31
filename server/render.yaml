@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: thanhdatshop-api
+    runtime: dotnet
+    plan: free
+    buildCommand: dotnet publish -c Release -o out
+    startCommand: dotnet out/server.dll
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: DATABASE_PATH
+        value: /data/database.db
+      - key: UPLOADS_PATH
+        value: /data/uploads
+    disk:
+      name: thanhdatshop-data
+      mountPath: /data
+      sizeGB: 1

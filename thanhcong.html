@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán thành công - Thời Trang của Đạt</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        .success-container {
+            text-align: center;
+            background: #ffffff;
+            padding: 50px 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .success-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, #4CAF50, #81C784, #4CAF50);
+        }
+
+        .success-icon {
+            margin-bottom: 30px;
+            animation: bounceIn 0.8s ease-out;
+        }
+
+        .success-icon i {
+            font-size: 80px;
+            color: #4CAF50;
+            animation: pulse 2s infinite;
+        }
+
+        h1 {
+            margin: 20px 0;
+            font-size: 28px;
+            color: #2E7D32;
+            font-weight: bold;
+            animation: slideInUp 0.8s ease-out 0.2s both;
+        }
+
+        .success-message {
+            font-size: 16px;
+            margin: 15px 0 30px;
+            color: #666;
+            line-height: 1.6;
+            animation: slideInUp 0.8s ease-out 0.4s both;
+        }
+
+        .countdown {
+            font-size: 14px;
+            color: #999;
+            margin: 20px 0;
+            animation: slideInUp 0.8s ease-out 0.6s both;
+        }
+
+        .countdown-number {
+            font-weight: bold;
+            color: #4CAF50;
+            font-size: 18px;
+        }
+
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            color: #fff;
+            background: linear-gradient(45deg, #4CAF50, #66BB6A);
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+            animation: slideInUp 0.8s ease-out 0.8s both;
+        }
+
+        .btn:hover {
+            background: linear-gradient(45deg, #388E3C, #4CAF50);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #E0E0E0;
+            border-radius: 2px;
+            margin: 20px 0;
+            overflow: hidden;
+            animation: slideInUp 0.8s ease-out 0.6s both;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #66BB6A);
+            border-radius: 2px;
+            width: 0%;
+            animation: progress 5s linear forwards;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        @keyframes progress {
+            from {
+                width: 0%;
+            }
+            to {
+                width: 100%;
+            }
+        }
+
+        .order-info {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: left;
+            animation: slideInUp 0.8s ease-out 1s both;
+        }
+
+        .order-info h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 18px;
+            text-align: center;
+        }
+
+        .order-details p {
+            margin: 8px 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .order-details strong {
+            color: #333;
+        }
+
+        @media (max-width: 480px) {
+            .success-container {
+                padding: 30px 20px;
+                margin: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .success-icon i {
+                font-size: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">
+            <i class="fas fa-check-circle"></i>
+        </div>
+        <h1>Thanh toán thành công!</h1>
+        <p class="success-message">
+            Cảm ơn bạn đã mua hàng tại <strong>Thời Trang của Đạt</strong>!<br>
+            Đơn hàng của bạn đã được xử lý thành công và sẽ được giao trong thời gian sớm nhất.
+        </p>
+        
+        <div id="orderInfo" class="order-info" style="display: none;">
+            <h3>Thông tin đơn hàng</h3>
+            <div class="order-details">
+                <p><strong>Mã đơn hàng:</strong> <span id="orderId"></span></p>
+                <p><strong>Tổng tiền:</strong> <span id="orderTotal"></span></p>
+                <p><strong>Phương thức thanh toán:</strong> <span id="paymentMethod"></span></p>
+            </div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        
+        <div class="countdown">
+            Tự động chuyển về trang chủ sau <span class="countdown-number" id="countdown">5</span> giây
+        </div>
+        
+        <a href="index.html" class="btn" onclick="resetCart()">
+            <i class="fas fa-home"></i>
+            Về trang chủ ngay
+        </a>
+    </div>
+
+    <script>
+        let countdown = 5;
+        const countdownElement = document.getElementById('countdown');
+        
+        // Hàm đặt lại giỏ hàng
+        function resetCart() {
+            localStorage.removeItem('cart');
+            localStorage.removeItem('checkoutCart');
+        }
+        
+        // Hàm hiển thị thông tin đơn hàng
+        function displayOrderInfo() {
+            const lastOrder = localStorage.getItem('lastOrder');
+            if (lastOrder) {
+                const orderData = JSON.parse(lastOrder);
+                const orderInfo = document.getElementById('orderInfo');
+                const orderId = document.getElementById('orderId');
+                const orderTotal = document.getElementById('orderTotal');
+                const paymentMethod = document.getElementById('paymentMethod');
+                
+                // Tạo mã đơn hàng ngẫu nhiên
+                const orderNumber = 'ORD' + Date.now().toString().slice(-6);
+                orderId.textContent = orderNumber;
+                
+                // Hiển thị tổng tiền
+                orderTotal.textContent = orderData.finalTotal.toLocaleString() + 'đ';
+                
+                // Hiển thị phương thức thanh toán
+                const paymentMethods = {
+                    'cod': 'Thanh toán khi nhận hàng',
+                    'qr': 'Chuyển khoản qua QR'
+                };
+                paymentMethod.textContent = paymentMethods[orderData.paymentMethod] || orderData.paymentMethod;
+                
+                // Hiển thị thông tin đơn hàng
+                orderInfo.style.display = 'block';
+            }
+        }
+        
+        // Hàm cập nhật countdown
+        function updateCountdown() {
+            countdownElement.textContent = countdown;
+            countdown--;
+            
+            if (countdown < 0) {
+                resetCart();
+                window.location.href = 'index.html';
+            }
+        }
+        
+        // Chạy countdown
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        
+        // Hiển thị thông tin đơn hàng khi trang load
+        displayOrderInfo();
+        
+        // Reset cart ngay khi trang load
+        resetCart();
+        
+        // Dừng countdown nếu user click nút
+        document.querySelector('.btn').addEventListener('click', function() {
+            clearInterval(countdownInterval);
+        });
+    </script>
+</body>
+</html>

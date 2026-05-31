@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập - Thời Trang của Đạt</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+
+        .auth-container {
+            max-width: 500px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .auth-box {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .auth-tabs {
+            display: flex;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 15px;
+            text-align: center;
+            background: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .auth-tab.active {
+            color: #ff6f61;
+            border-bottom: 3px solid #ff6f61;
+        }
+
+        .auth-content {
+            padding: 30px;
+        }
+
+        .auth-form {
+            display: none;
+        }
+
+        .auth-form.active {
+            display: block;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .auth-header h2 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .auth-header p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #ff6f61;
+        }
+
+        .password-toggle {
+            position: relative;
+        }
+
+        .password-toggle i {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+        }
+
+        .btn-auth {
+            width: 100%;
+            padding: 12px;
+            background: #ff6f61;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-auth:hover {
+            background: #e15d4a;
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .form-footer a {
+            color: #ff6f61;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .alert-message {
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <script src="js/api.js?v=netlify-fallback-20260601"></script>
+    <header>
+        <a class="logo" href="index.html">
+            <img src="images/logo.png?v=td-new-logo-20260530" alt="TD Logo">
+        </a>
+        <div class="menu-and-search">
+            <div class="nav-wrap">
+                <nav class="menu">
+                    <ul>
+                        <li><a href="index.html">Trang chủ</a></li>
+                        <li><a href="products.html">Sản phẩm</a></li>
+                        <li><a href="contact.html">Liên hệ</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="search-bar">
+                <input type="text" id="searchInput" placeholder="Tìm kiếm sản phẩm..." autocomplete="off">
+                <button id="searchBtn"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+        <div class="icons" style="position: relative;">
+            <a href="#" id="cartButton" style="position: relative; text-decoration: none; color: inherit;">
+                <i class="fas fa-shopping-cart" style="position: relative;">
+                    <span class="cart-count">0</span>
+                </i>
+            </a>
+            <button class="user-button" id="userButton">
+                <i class="fas fa-user"></i>
+            </button>
+            <div class="user-dropdown" id="userDropdown">
+                <a href="login.html">Đăng nhập</a>
+                <a href="contact.html">Liên hệ</a>
+                <a href="user.html">Thông tin người dùng</a>
+                <a href="admin.html" class="admin-menu-link" style="display: none;">Quản trị hệ thống</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="auth-container">
+        <div class="auth-box">
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchTab('login')">Đăng Nhập</button>
+                <button class="auth-tab" onclick="switchTab('register')">Đăng Ký</button>
+            </div>
+
+            <div class="auth-content">
+                <div id="loginForm" class="auth-form active">
+                    <div class="auth-header">
+                        <h2>Chào Mừng Trở Lại!</h2>
+                        <p>Đăng nhập để tiếp tục mua sắm</p>
+                    </div>
+
+                    <div id="loginAlert" class="alert-message"></div>
+
+                    <form onsubmit="handleLogin(event)">
+                        <div class="form-group">
+                            <label for="loginEmail">Email</label>
+                            <input type="email" id="loginEmail" class="form-control" placeholder="example@email.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="loginPassword">Mật khẩu</label>
+                            <div class="password-toggle">
+                                <input type="password" id="loginPassword" class="form-control" placeholder="••••••••" required>
+                                <i class="fas fa-eye" onclick="togglePassword('loginPassword', this)"></i>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-auth">
+                            <i class="fas fa-sign-in-alt"></i> Đăng Nhập
+                        </button>
+
+                        <div class="form-footer">
+                            Chưa có tài khoản? <a href="#" onclick="switchTab('register'); return false;">Đăng ký ngay</a>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="registerForm" class="auth-form">
+                    <div class="auth-header">
+                        <h2>Tạo Tài Khoản Mới</h2>
+                        <p>Đăng ký để trải nghiệm mua sắm tốt nhất</p>
+                    </div>
+
+                    <div id="registerAlert" class="alert-message"></div>
+
+                    <form onsubmit="handleRegister(event)">
+                        <div class="form-group">
+                            <label for="registerName">Họ và Tên</label>
+                            <input type="text" id="registerName" class="form-control" placeholder="Nguyễn Văn A" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="registerEmail">Email</label>
+                            <input type="email" id="registerEmail" class="form-control" placeholder="example@email.com" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="registerPhone">Số điện thoại</label>
+                            <input type="tel" id="registerPhone" class="form-control" placeholder="0123456789" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="registerPassword">Mật khẩu</label>
+                            <div class="password-toggle">
+                                <input type="password" id="registerPassword" class="form-control" placeholder="••••••••" required minlength="6">
+                                <i class="fas fa-eye" onclick="togglePassword('registerPassword', this)"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="registerConfirmPassword">Xác nhận mật khẩu</label>
+                            <div class="password-toggle">
+                                <input type="password" id="registerConfirmPassword" class="form-control" placeholder="••••••••" required minlength="6">
+                                <i class="fas fa-eye" onclick="togglePassword('registerConfirmPassword', this)"></i>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-auth">
+                            <i class="fas fa-user-plus"></i> Đăng Ký
+                        </button>
+
+                        <div class="form-footer">
+                            Đã có tài khoản? <a href="#" onclick="switchTab('login'); return false;">Đăng nhập</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-wrapper">
+            <div class="footer-section about">
+                <h2>Thời Trang của ĐẠT</h2>
+                <p>Cửa hàng thời trang đẳng cấp, mang đến phong cách và sự thoải mái. Khám phá bộ sưu tập quần áo thời thượng dành riêng cho bạn.</p>
+            </div>
+            <div class="footer-section links">
+                <h2>Liên kết nhanh</h2>
+                <ul>
+                    <li><a href="aothun.html">Áo Thun</a></li>
+                    <li><a href="vay.html">Váy</a></li>
+                    <li><a href="quanthun.html">Quần Thun</a></li>
+                    <li><a href="aokhoac.html">Áo Khoác</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section contact">
+                <h2>Thông tin liên hệ</h2>
+                <p><i class="fas fa-map-marker-alt"></i> 123 Đường Thời Trang, Quận 1, TP. HCM</p>
+                <p><i class="fas fa-phone"></i> <a href="tel:+84348588823">+84348588823</a></p>
+                <p><i class="fas fa-envelope"></i> <a href="mailto:dat0364634549@gmail.com">dat0364634549@gmail.com</a></p>
+            </div>
+            <div class="footer-section social">
+                <h2>Kết nối với chúng tôi</h2>
+                <div class="social-icons">
+                    <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="https://youtube.com" target="_blank"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <div class="cart-popup-overlay" id="cartPopup">
+        <div class="cart-popup">
+            <div class="cart-popup-header">
+                <h2 class="cart-popup-title">Giỏ Hàng</h2>
+                <button class="cart-popup-close" id="cartPopupClose">&times;</button>
+            </div>
+            <div class="cart-popup-content" id="cartPopupContent">
+            </div>
+        </div>
+    </div>
+
+    <script src="js/cart-popup.js"></script>
+    <script src="js/admin-menu.js?v=admin-menu-fix-20260531"></script>
+    <script>
+        function switchTab(tab) {
+            const loginTab = document.querySelectorAll('.auth-tab')[0];
+            const registerTab = document.querySelectorAll('.auth-tab')[1];
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+
+            if (tab === 'login') {
+                loginTab.classList.add('active');
+                registerTab.classList.remove('active');
+                loginForm.classList.add('active');
+                registerForm.classList.remove('active');
+            } else {
+                loginTab.classList.remove('active');
+                registerTab.classList.add('active');
+                loginForm.classList.remove('active');
+                registerForm.classList.add('active');
+            }
+        }
+
+        function togglePassword(inputId, icon) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        function showAlert(alertId, message, type) {
+            const alert = document.getElementById(alertId);
+            alert.textContent = message;
+            alert.className = `alert-message alert-${type}`;
+            alert.style.display = 'block';
+            
+            setTimeout(() => {
+                alert.style.display = 'none';
+            }, 5000);
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const response = await API.users.login(email, password);
+                
+                if (response && response.id) {
+                    const loggedInUser = {
+                        id: response.id,
+                        name: response.name,
+                        email: response.email,
+                        phone: response.phone,
+                        role: response.role
+                    };
+                    localStorage.setItem('currentUser', JSON.stringify(loggedInUser));
+                    if (loggedInUser.role === 'admin') {
+                        localStorage.setItem('adminUser', JSON.stringify(loggedInUser));
+                    } else {
+                        localStorage.removeItem('adminUser');
+                    }
+                    
+                    showAlert('loginAlert', 'Đăng nhập thành công! Đang chuyển hướng...', 'success');
+                    
+                    setTimeout(() => {
+                        window.location.href = loggedInUser.role === 'admin' ? 'admin.html' : 'index.html';
+                    }, 1500);
+                } else {
+                    showAlert('loginAlert', 'Email hoặc mật khẩu không chính xác!', 'error');
+                }
+            } catch (error) {
+                console.error('Lỗi đăng nhập:', error);
+                showAlert('loginAlert', 'Đăng nhập thất bại! Vui lòng kiểm tra lại thông tin.', 'error');
+            }
+        }
+
+        async function handleRegister(event) {
+            event.preventDefault();
+            
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const phone = document.getElementById('registerPhone').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('registerConfirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showAlert('registerAlert', 'Mật khẩu xác nhận không khớp!', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showAlert('registerAlert', 'Mật khẩu phải có ít nhất 6 ký tự!', 'error');
+                return;
+            }
+
+            try {
+                const userData = {
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    password: password,
+                    address: '',
+                    role: 'user'
+                };
+
+                const response = await API.users.create(userData);
+                
+                if (response && response.id) {
+                    showAlert('registerAlert', 'Đăng ký thành công! Đang chuyển sang đăng nhập...', 'success');
+                    
+                    setTimeout(() => {
+                        document.getElementById('loginEmail').value = email;
+                        switchTab('login');
+                    }, 1500);
+                } else {
+                    showAlert('registerAlert', response.message || 'Email này đã được đăng ký!', 'error');
+                }
+            } catch (error) {
+                console.error('Lỗi đăng ký:', error);
+                showAlert('registerAlert', 'Đăng ký thất bại! Vui lòng thử lại sau.', 'error');
+            }
+        }
+
+        const userButton = document.getElementById('userButton');
+        const userDropdown = document.getElementById('userDropdown');
+
+        userButton.addEventListener('mouseover', () => {
+            userDropdown.style.display = 'block';
+        });
+
+        userDropdown.addEventListener('mouseleave', () => {
+            userDropdown.style.display = 'none';
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!userButton.contains(event.target) && !userDropdown.contains(event.target)) {
+                userDropdown.style.display = 'none';
+            }
+        });
+
+        // Chức năng tìm kiếm
+        const searchBtn = document.getElementById('searchBtn');
+        const searchInput = document.getElementById('searchInput');
+
+        function performSearch() {
+            const query = searchInput.value.trim();
+            if (query) {
+                window.location.href = `products.html?search=${encodeURIComponent(query)}`;
+            }
+        }
+
+        searchBtn.addEventListener('click', performSearch);
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    </script>
+    <script src="js/search-dropdown.js"></script>
+</body>
+</html>
