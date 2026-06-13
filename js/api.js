@@ -8,6 +8,8 @@ const isLocalBackendPage = LOCAL_HOSTS.includes(currentHost) && window.location.
 const API_BASE_URL = isCloudflareTunnel || isLocalBackendPage
     ? `${currentOrigin}/api`
     : `${PUBLIC_SITE_ORIGIN}/api`;
+const API_ORIGIN = new URL(API_BASE_URL).origin;
+const API_TIMEOUT_MS = 90000;
 
 const FALLBACK_PRODUCTS = [
     {
@@ -125,29 +127,91 @@ const FALLBACK_USERS = [
     }
 ];
 
-async function fetchJson(url, fallbackValue) {
+function resolveImageUrl(imagePath) {
+    const value = String(imagePath || '').trim();
+    if (!value || value.startsWith('data:') || value.startsWith('blob:')) {
+        return value;
+    }
+
+    if (/^https?:\/\//i.test(value)) {
+        return value;
+    }
+
+    if (/^\/?uploads\//i.test(value)) {
+        return `${API_ORIGIN}/${value.replace(/^\/+/, '')}`;
+    }
+
+    return value;
+}
+
+function normalizeProduct(product) {
+    if (!product || typeof product !== 'object') {
+        return product;
+    }
+
+    return {
+        ...product,
+        image: resolveImageUrl(product.image),
+        images: Array.isArray(product.images)
+            ? product.images.map(resolveImageUrl)
+            : product.images
+    };
+}
+
+function normalizeProductsResponse(data) {
+    return Array.isArray(data) ? data.map(normalizeProduct) : normalizeProduct(data);
+}
+
+async function requestJson(url, options = {}) {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), API_TIMEOUT_MS);
+
     try {
-        const response = await fetch(url);
+        const response = await fetch(url, {
+            ...options,
+            cache: 'no-store',
+            signal: controller.signal
+        });
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}`);
         }
         return await response.json();
-    } catch (error) {
-        console.warn('API fallback:', error);
-        return fallbackValue;
+    } finally {
+        clearTimeout(timeoutId);
     }
 }
 
-async function fetchJsonWithBody(url, options, fallbackValue) {
+async function fetchJson(url, fallbackValue, transform) {
     try {
-        const response = await fetch(url, options);
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-        return await response.json();
+        const data = await requestJson(url);
+        return transform ? transform(data) : data;
     } catch (error) {
-        console.warn('API fallback:', error);
-        return typeof fallbackValue === 'function' ? fallbackValue() : fallbackValue;
+        const canUseFallback = isCloudflareTunnel || isLocalBackendPage;
+        if (canUseFallback && fallbackValue !== undefined) {
+            console.warn('API local fallback:', error);
+            const data = typeof fallbackValue === 'function' ? fallbackValue() : fallbackValue;
+            return transform ? transform(data) : data;
+        }
+
+        console.error('Không thể kết nối API production:', error);
+        throw new Error('Máy chủ dữ liệu đang không hoạt động. Vui lòng thử lại sau.');
+    }
+}
+
+async function fetchJsonWithBody(url, options, fallbackValue, transform) {
+    try {
+        const data = await requestJson(url, options);
+        return transform ? transform(data) : data;
+    } catch (error) {
+        const canUseFallback = isCloudflareTunnel || isLocalBackendPage;
+        if (canUseFallback && fallbackValue !== undefined) {
+            console.warn('API local fallback:', error);
+            const data = typeof fallbackValue === 'function' ? fallbackValue() : fallbackValue;
+            return transform ? transform(data) : data;
+        }
+
+        console.error('Không thể kết nối API production:', error);
+        throw new Error('Máy chủ dữ liệu đang không hoạt động. Vui lòng thử lại sau.');
     }
 }
 
@@ -169,23 +233,23 @@ function searchFallbackProducts(query) {
 const API = {
     products: {
         async getAll() {
-            return await fetchJson(`${API_BASE_URL}/products`, FALLBACK_PRODUCTS);
+            return await fetchJson(`${API_BASE_URL}/products`, FALLBACK_PRODUCTS, normalizeProductsResponse);
         },
 
         async getById(id) {
-            return await fetchJson(`${API_BASE_URL}/products/${id}`, findFallbackProduct(id));
+            return await fetchJson(`${API_BASE_URL}/products/${id}`, findFallbackProduct(id), normalizeProductsResponse);
         },
 
         async getByCategory(category) {
-            return await fetchJson(`${API_BASE_URL}/products/category/${category}`, filterFallbackByCategory(category));
+            return await fetchJson(`${API_BASE_URL}/products/category/${category}`, filterFallbackByCategory(category), normalizeProductsResponse);
         },
 
         async getHot() {
-            return await fetchJson(`${API_BASE_URL}/products/hot`, FALLBACK_PRODUCTS.filter(product => product.isHot));
+            return await fetchJson(`${API_BASE_URL}/products/hot`, FALLBACK_PRODUCTS.filter(product => product.isHot), normalizeProductsResponse);
         },
 
         async search(query) {
-            return await fetchJson(`${API_BASE_URL}/products/search?query=${encodeURIComponent(query)}`, searchFallbackProducts(query));
+            return await fetchJson(`${API_BASE_URL}/products/search?query=${encodeURIComponent(query)}`, searchFallbackProducts(query), normalizeProductsResponse);
         },
 
         async create(productData) {

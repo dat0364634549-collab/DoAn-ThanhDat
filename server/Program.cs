@@ -41,7 +41,22 @@ var uploadRootPath = !string.IsNullOrWhiteSpace(uploadsPath)
     ? uploadsPath
     : Path.Combine(webRootPath, "images");
 
-Directory.CreateDirectory(Path.GetDirectoryName(databasePath ?? string.Empty) ?? app.Environment.ContentRootPath);
+if (!string.IsNullOrWhiteSpace(databasePath))
+{
+    var persistentDatabasePath = Path.GetFullPath(databasePath);
+    var persistentDatabaseDirectory = Path.GetDirectoryName(persistentDatabasePath);
+    if (!string.IsNullOrWhiteSpace(persistentDatabaseDirectory))
+    {
+        Directory.CreateDirectory(persistentDatabaseDirectory);
+    }
+
+    var bundledDatabasePath = Path.Combine(app.Environment.ContentRootPath, "database.db");
+    if (!File.Exists(persistentDatabasePath) && File.Exists(bundledDatabasePath))
+    {
+        File.Copy(bundledDatabasePath, persistentDatabasePath);
+    }
+}
+
 Directory.CreateDirectory(uploadRootPath);
 
 using (var scope = app.Services.CreateScope())

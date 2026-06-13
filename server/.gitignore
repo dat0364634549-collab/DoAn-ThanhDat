@@ -7,4 +7,5 @@ obj/
 *.cache
 *.log
 appsettings.Development.json
-database.db
+database.db-wal
+database.db-shm
