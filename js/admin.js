@@ -9,7 +9,8 @@ const API_URL = (ADMIN_HOST.includes('trycloudflare.com') || (ADMIN_LOCAL_HOSTS.
 let currentUser = null;
 
 function checkAdminAuth() {
-    const adminUser = localStorage.getItem('adminUser');
+    localStorage.removeItem('adminUser');
+    const adminUser = sessionStorage.getItem('adminUser');
     
     if (!adminUser) {
         window.location.href = 'admin-login.html';
@@ -19,13 +20,13 @@ function checkAdminAuth() {
     try {
         currentUser = JSON.parse(adminUser);
         if (currentUser.role !== 'admin') {
-            localStorage.removeItem('adminUser');
+            sessionStorage.removeItem('adminUser');
             window.location.href = 'index.html';
             return false;
         }
         return true;
     } catch (error) {
-        localStorage.removeItem('adminUser');
+        sessionStorage.removeItem('adminUser');
         window.location.href = 'admin-login.html';
         return false;
     }
@@ -150,7 +151,12 @@ function setupLogout() {
     document.getElementById('logoutBtn').addEventListener('click', (e) => {
         e.preventDefault();
         if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
+            sessionStorage.removeItem('adminUser');
             localStorage.removeItem('adminUser');
+            const savedUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
+            if (savedUser && savedUser.role === 'admin') {
+                localStorage.removeItem('currentUser');
+            }
             window.location.href = 'index.html';
         }
     });

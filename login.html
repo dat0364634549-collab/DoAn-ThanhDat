@@ -349,7 +349,7 @@
     </div>
 
     <script src="js/cart-popup.js"></script>
-    <script src="js/admin-menu.js?v=admin-menu-fix-20260531"></script>
+    <script src="js/admin-menu.js?v=admin-session-only-20260613"></script>
     <script>
         function switchTab(tab) {
             const loginTab = document.querySelectorAll('.auth-tab')[0];
@@ -413,9 +413,11 @@
                     };
                     localStorage.setItem('currentUser', JSON.stringify(loggedInUser));
                     if (loggedInUser.role === 'admin') {
-                        localStorage.setItem('adminUser', JSON.stringify(loggedInUser));
+                        localStorage.removeItem('adminUser');
+                        sessionStorage.setItem('adminUser', JSON.stringify(loggedInUser));
                     } else {
                         localStorage.removeItem('adminUser');
+                        sessionStorage.removeItem('adminUser');
                     }
                     
                     showAlert('loginAlert', 'Đăng nhập thành công! Đang chuyển hướng...', 'success');

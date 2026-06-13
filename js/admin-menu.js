@@ -8,15 +8,14 @@
     }
 
     function syncAdminMenu() {
-        const currentUser = readJson('currentUser');
-        const adminUser = readJson('adminUser');
-        const isAdmin =
-            (currentUser && (currentUser.role === 'admin' || currentUser.email === 'admin@gmail.com')) ||
-            (adminUser && (adminUser.role === 'admin' || adminUser.email === 'admin@gmail.com'));
-
-        if (currentUser && (currentUser.role === 'admin' || currentUser.email === 'admin@gmail.com')) {
-            localStorage.setItem('adminUser', JSON.stringify({ ...currentUser, role: 'admin' }));
+        localStorage.removeItem('adminUser');
+        let adminUser = null;
+        try {
+            adminUser = JSON.parse(sessionStorage.getItem('adminUser') || 'null');
+        } catch (error) {
+            sessionStorage.removeItem('adminUser');
         }
+        const isAdmin = adminUser && adminUser.role === 'admin';
 
         document.querySelectorAll('.admin-menu-link').forEach((link) => {
             link.style.display = isAdmin ? 'block' : 'none';

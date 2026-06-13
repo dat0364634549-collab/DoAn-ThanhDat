@@ -61,7 +61,8 @@
                     const user = await response.json();
                     
                     if (user.role === 'admin') {
-                        localStorage.setItem('adminUser', JSON.stringify(user));
+                        localStorage.removeItem('adminUser');
+                        sessionStorage.setItem('adminUser', JSON.stringify(user));
                         window.location.href = 'admin.html';
                     } else {
                         errorMessage.textContent = 'Bạn không có quyền truy cập trang quản trị!';
@@ -76,8 +77,8 @@
             }
         });
 
-        if (localStorage.getItem('adminUser')) {
-            const user = JSON.parse(localStorage.getItem('adminUser'));
+        if (sessionStorage.getItem('adminUser')) {
+            const user = JSON.parse(sessionStorage.getItem('adminUser'));
             if (user.role === 'admin') {
                 window.location.href = 'admin.html';
             }

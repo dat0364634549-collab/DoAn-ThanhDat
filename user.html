@@ -213,7 +213,7 @@
     </div>
 
     <script src="js/cart-popup.js"></script>
-    <script src="js/admin-menu.js?v=admin-menu-fix-20260531"></script>
+    <script src="js/admin-menu.js?v=admin-session-only-20260613"></script>
     <script>
         const userButton = document.getElementById('userButton');
         const userDropdown = document.getElementById('userDropdown');
@@ -249,8 +249,8 @@
                 document.getElementById('loginBtn').style.display = 'none';
                 document.getElementById('logoutBtn').style.display = 'inline-block';
                 const isAdminAccount = currentUser.role === 'admin' || currentUser.email === 'admin@gmail.com';
-                if (isAdminAccount) {
-                    localStorage.setItem('adminUser', JSON.stringify({ ...currentUser, role: 'admin' }));
+                const activeAdminSession = isAdminAccount && sessionStorage.getItem('adminUser');
+                if (activeAdminSession) {
                     document.getElementById('adminPanelBtn').style.display = 'inline-block';
                 } else {
                     document.getElementById('adminPanelBtn').style.display = 'none';
@@ -274,6 +274,7 @@
             if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
                 localStorage.removeItem('currentUser');
                 localStorage.removeItem('adminUser');
+                sessionStorage.removeItem('adminUser');
                 alert('Đã đăng xuất thành công!');
                 loadUserInfo();
             }
