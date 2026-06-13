@@ -259,6 +259,94 @@
     color: #2c3e50;
 }
 
+.recent-orders-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 10px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-color: #3498db #e8eef5;
+    scrollbar-width: auto;
+}
+
+.recent-orders-scroll::-webkit-scrollbar {
+    height: 12px;
+}
+
+.recent-orders-scroll::-webkit-scrollbar-track {
+    margin: 0 12px;
+    border-radius: 999px;
+    background: #e8eef5;
+}
+
+.recent-orders-scroll::-webkit-scrollbar-thumb {
+    border: 2px solid #e8eef5;
+    border-radius: 999px;
+    background: #3498db;
+}
+
+.recent-orders-table {
+    min-width: 720px;
+}
+
+.recent-orders-table th:last-child,
+.recent-orders-table td:last-child {
+    min-width: 130px;
+    padding-right: 24px;
+}
+
+.admin-table-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding-bottom: 10px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-color: #3498db #e8eef5;
+    scrollbar-width: auto;
+}
+
+.admin-table-scroll::-webkit-scrollbar {
+    height: 12px;
+}
+
+.admin-table-scroll::-webkit-scrollbar-track {
+    margin: 0 12px;
+    border-radius: 999px;
+    background: #e8eef5;
+}
+
+.admin-table-scroll::-webkit-scrollbar-thumb {
+    border: 2px solid #e8eef5;
+    border-radius: 999px;
+    background: #3498db;
+}
+
+.products-admin-table,
+.orders-admin-table,
+.responsive-table table {
+    min-width: 940px;
+}
+
+.report-admin-table {
+    min-width: 620px;
+}
+
+.best-selling-admin-table {
+    min-width: 760px;
+}
+
+.products-admin-table th:last-child,
+.products-admin-table td:last-child,
+.orders-admin-table th:last-child,
+.orders-admin-table td:last-child,
+.responsive-table th:last-child,
+.responsive-table td:last-child,
+.best-selling-admin-table th:last-child,
+.best-selling-admin-table td:last-child {
+    min-width: 140px;
+    padding-right: 24px;
+}
+
 .btn {
     padding: 10px 20px;
     border: none;
@@ -548,6 +636,18 @@ body.modal-open {
 }
 
 @media (max-width: 768px) {
+    .recent-orders-scroll {
+        padding-bottom: 14px;
+    }
+
+    .recent-orders-table {
+        min-width: 760px;
+    }
+
+    .admin-table-scroll {
+        padding-bottom: 14px;
+    }
+
     .admin-panel {
         flex-direction: column;
     }

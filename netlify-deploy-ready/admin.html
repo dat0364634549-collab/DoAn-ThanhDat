@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản trị hệ thống</title>
-    <link rel="stylesheet" href="css/admin.css?v=integrated-admin-20260530">
+    <link rel="stylesheet" href="css/admin.css?v=all-admin-table-scroll-20260613">
 </head>
 <body>
     <div class="admin-panel">
@@ -64,7 +64,8 @@
                         <div class="table-header">
                             <h3>Đơn hàng gần đây</h3>
                         </div>
-                        <table>
+                        <div class="recent-orders-scroll" aria-label="Kéo ngang để xem đầy đủ đơn hàng">
+                        <table class="recent-orders-table">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -80,6 +81,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 </section>
 
@@ -89,7 +91,8 @@
                             <h3>Danh sách sản phẩm</h3>
                             <button class="btn btn-primary" id="addProductBtn">Thêm sản phẩm</button>
                         </div>
-                        <table>
+                        <div class="admin-table-scroll">
+                        <table class="products-admin-table">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -107,6 +110,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 </section>
 
@@ -115,7 +119,8 @@
                         <div class="table-header">
                             <h3>Danh sách đơn hàng</h3>
                         </div>
-                        <table>
+                        <div class="admin-table-scroll">
+                        <table class="orders-admin-table">
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -133,6 +138,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 </section>
 
@@ -176,7 +182,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="responsive-table">
+                        <div class="responsive-table admin-table-scroll">
                             <table>
                                 <thead>
                                     <tr>
@@ -234,7 +240,8 @@
                         <div class="table-header">
                             <h3>Doanh thu theo ngày</h3>
                         </div>
-                        <table>
+                        <div class="admin-table-scroll">
+                        <table class="report-admin-table">
                             <thead>
                                 <tr>
                                     <th>Ngày</th>
@@ -248,6 +255,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                        </div>
                     </div>
 
                     <div class="filter-bar">
@@ -265,7 +273,8 @@
                         <div class="table-header">
                             <h3>Doanh thu theo tháng</h3>
                         </div>
-                        <table>
+                        <div class="admin-table-scroll">
+                        <table class="report-admin-table">
                             <thead>
                                 <tr>
                                     <th>Tháng</th>
@@ -279,13 +288,15 @@
                                 </tr>
                             </tbody>
                         </table>
+                        </div>
                     </div>
 
                     <div class="data-table">
                         <div class="table-header">
                             <h3>Sản phẩm bán chạy</h3>
                         </div>
-                        <table>
+                        <div class="admin-table-scroll">
+                        <table class="best-selling-admin-table">
                             <thead>
                                 <tr>
                                     <th>STT</th>
@@ -300,6 +311,7 @@
                                 </tr>
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 </section>
             </div>
