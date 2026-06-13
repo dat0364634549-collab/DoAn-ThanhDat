@@ -1,0 +1,7 @@
+.git
+.netlify
+.vscode
+**/bin
+**/obj
+**/node_modules
+cloudflared-tunnel*.log
