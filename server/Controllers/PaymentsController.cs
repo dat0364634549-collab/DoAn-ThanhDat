@@ -45,7 +45,7 @@ public class PaymentsController : ControllerBase
             });
         }
 
-        var now = DateTime.Now;
+        var now = GetVietnamTime();
         var clientIp = GetClientIp();
         var vnpay = new VnPayService();
         vnpay.Add("vnp_Version", VnPayService.Version);
@@ -53,7 +53,7 @@ public class PaymentsController : ControllerBase
         vnpay.Add("vnp_TmnCode", settings.TmnCode);
         vnpay.Add("vnp_Amount", decimal.ToInt64(transaction.TotalAmount * 100).ToString(CultureInfo.InvariantCulture));
         vnpay.Add("vnp_CreateDate", now.ToString("yyyyMMddHHmmss"));
-        vnpay.Add("vnp_ExpireDate", now.AddMinutes(15).ToString("yyyyMMddHHmmss"));
+        vnpay.Add("vnp_ExpireDate", now.AddMinutes(30).ToString("yyyyMMddHHmmss"));
         vnpay.Add("vnp_CurrCode", "VND");
         vnpay.Add("vnp_IpAddr", clientIp);
         vnpay.Add("vnp_Locale", "vn");
@@ -66,8 +66,22 @@ public class PaymentsController : ControllerBase
         {
             paymentUrl = vnpay.CreatePaymentUrl(settings.PaymentUrl, settings.HashSecret),
             transactionId = transaction.Id,
-            expiresAt = now.AddMinutes(15)
+            expiresAt = now.AddMinutes(30)
         });
+    }
+
+    private static DateTime GetVietnamTime()
+    {
+        try
+        {
+            var timeZone = TimeZoneInfo.FindSystemTimeZoneById("Asia/Ho_Chi_Minh");
+            return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
+        }
+        catch (TimeZoneNotFoundException)
+        {
+            var timeZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+            return TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, timeZone);
+        }
     }
 
     [HttpGet("vnpay-return")]
