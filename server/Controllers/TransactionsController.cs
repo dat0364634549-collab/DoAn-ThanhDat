@@ -59,7 +59,7 @@ namespace server.Controllers
             transaction.PaymentMethod = string.IsNullOrWhiteSpace(transaction.PaymentMethod) ? "cod" : transaction.PaymentMethod;
             _context.Transactions.Add(transaction);
             
-            if (!string.IsNullOrEmpty(transaction.Products))
+            if (!string.IsNullOrEmpty(transaction.Products) && transaction.Status != "payment_pending")
             {
                 try
                 {

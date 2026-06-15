@@ -8,3 +8,9 @@ services:
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
         value: Production
+      - key: VNPAY_TMN_CODE
+        sync: false
+      - key: VNPAY_HASH_SECRET
+        sync: false
+      - key: VNPAY_RETURN_URL
+        value: https://thanhdatshop-api.onrender.com/api/payments/vnpay-return

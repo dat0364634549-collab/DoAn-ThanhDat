@@ -1,23 +1,23 @@
-# Chay website trong Expo
+# Thanh Dat Shop Mobile
 
-App nay dung WebView de mo website HTML co san cua do an.
+Ung dung khach hang React Native/Expo su dung API that cua Thanh Dat Shop.
 
-## Chay tren dien thoai
+## Chay ung dung
 
-1. Chay backend o thu muc goc:
-
-```bash
-dotnet run --project server/server.csproj
-```
-
-2. Cai dependency va mo Expo:
-
-```bash
+```powershell
 cd mobile-expo
 npm install
 npx expo start
 ```
 
-3. Quet QR bang Expo Go.
+Quet QR bang Expo Go tren Android/iOS. Co the nhan `w` de kiem tra tren trinh
+duyet.
 
-Dien thoai va may tinh phai dung chung Wi-Fi. Neu Windows Firewall hoi quyen truy cap cho .NET hoac Node, chon Allow.
+## Chuc nang
+
+- Dang ky, dang nhap, luu phien va chinh sua ho so.
+- Danh sach, tim kiem, loc, sap xep va chi tiet san pham.
+- Gio hang luu tren thiet bi.
+- Thanh toan khi nhan hang hoac QR mo phong.
+- Lich su va trang thai don hang.
+- Loading, empty state, error state va keo xuong lam moi.

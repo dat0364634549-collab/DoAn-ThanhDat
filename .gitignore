@@ -1,5 +1,7 @@
 node_modules/
 mobile-expo/node_modules/
+mobile-expo/.expo/
+mobile-expo/dist/
 server/bin/
 server/obj/
 
