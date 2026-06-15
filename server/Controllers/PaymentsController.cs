@@ -108,6 +108,7 @@ public class PaymentsController : ControllerBase
                 const payload = {{payloadJson}};
                 if (window.ReactNativeWebView) window.ReactNativeWebView.postMessage(JSON.stringify(payload));
                 if (window.parent && window.parent !== window) window.parent.postMessage(payload, "*");
+                if (window.opener && !window.opener.closed) window.opener.postMessage(payload, "*");
               </script>
             </body>
             </html>

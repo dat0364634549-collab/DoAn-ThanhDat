@@ -79,6 +79,11 @@ export default function CheckoutScreen({ navigation }) {
       return;
     }
 
+    const paymentWindow =
+      payment === 'vnpay' && Platform.OS === 'web' && typeof window !== 'undefined'
+        ? window.open('about:blank', '_blank')
+        : null;
+
     setLoading(true);
     setError('');
     try {
@@ -87,7 +92,15 @@ export default function CheckoutScreen({ navigation }) {
         try {
           const session = await api.createVnPayPayment(order.id);
           setPaymentSession({ ...session, orderId: order.id });
+          if (Platform.OS === 'web') {
+            if (paymentWindow) {
+              paymentWindow.location.href = session.paymentUrl;
+            } else {
+              window.location.href = session.paymentUrl;
+            }
+          }
         } catch (paymentError) {
+          paymentWindow?.close();
           setError(paymentError.message);
         }
       } else {
@@ -99,6 +112,7 @@ export default function CheckoutScreen({ navigation }) {
         });
       }
     } catch (requestError) {
+      paymentWindow?.close();
       setError(requestError.message);
     } finally {
       setLoading(false);
@@ -135,6 +149,34 @@ export default function CheckoutScreen({ navigation }) {
       handleVnPayResult(JSON.parse(event.nativeEvent.data));
     } catch {
       setError('Không đọc được kết quả trả về từ VNPAY.');
+    }
+  }
+
+  async function checkVnPayStatus() {
+    if (!paymentSession) return;
+
+    setLoading(true);
+    setError('');
+    try {
+      const order = await api.getOrder(paymentSession.orderId);
+      if (order.status === 'paid') {
+        await handleVnPayResult({
+          success: true,
+          transactionId: order.id
+        });
+      } else if (order.status === 'payment_failed') {
+        await handleVnPayResult({
+          success: false,
+          transactionId: order.id,
+          message: 'Giao dich VNPAY da bi huy hoac thanh toan that bai.'
+        });
+      } else {
+        setError('VNPAY chua xac nhan thanh toan. Hay hoan tat giao dich roi kiem tra lai.');
+      }
+    } catch (requestError) {
+      setError(requestError.message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -190,13 +232,15 @@ export default function CheckoutScreen({ navigation }) {
         session={paymentSession}
         onClose={() => setPaymentSession(null)}
         onMessage={handleWebViewMessage}
+        onCheck={checkVnPayStatus}
+        checking={loading}
       />
       <ResultModal result={result} onClose={closeResult} />
     </Screen>
   );
 }
 
-function PaymentModal({ session, onClose, onMessage }) {
+function PaymentModal({ session, onClose, onMessage, onCheck, checking }) {
   if (!session) return null;
 
   return (
@@ -212,7 +256,23 @@ function PaymentModal({ session, onClose, onMessage }) {
           </Pressable>
         </View>
         {Platform.OS === 'web' ? (
-          <iframe title="VNPAY Sandbox" src={session.paymentUrl} style={webIframeStyle} />
+          <View style={styles.webPaymentNotice}>
+            <Text style={styles.webPaymentTitle}>VNPAY da mo trong cua so moi</Text>
+            <Text style={styles.webPaymentText}>
+              Hoan tat thanh toan tai VNPAY, sau do quay lai day va kiem tra trang thai don hang.
+            </Text>
+            <PrimaryButton
+              title="Mo lai trang VNPAY"
+              onPress={() => window.open(session.paymentUrl, '_blank')}
+              style={styles.webPaymentButton}
+            />
+            <PrimaryButton
+              title="Kiem tra thanh toan"
+              onPress={onCheck}
+              loading={checking}
+              style={styles.webPaymentButton}
+            />
+          </View>
         ) : (
           <WebView
             source={{ uri: session.paymentUrl }}
@@ -256,13 +316,6 @@ function PaymentOption({ active, title, description, onPress }) {
   );
 }
 
-const webIframeStyle = {
-  width: '100%',
-  height: '100%',
-  border: 'none',
-  backgroundColor: '#fff'
-};
-
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   content: {
@@ -294,6 +347,10 @@ const styles = StyleSheet.create({
   paymentHeaderText: { marginTop: 3, color: colors.muted, fontSize: 12 },
   closeButton: { paddingHorizontal: 14, paddingVertical: 9, borderRadius: 10, backgroundColor: '#eef2f7' },
   closeText: { color: colors.text, fontWeight: '800' },
+  webPaymentNotice: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 24 },
+  webPaymentTitle: { color: colors.text, fontSize: 22, fontWeight: '900', textAlign: 'center' },
+  webPaymentText: { maxWidth: 420, marginTop: 12, color: colors.muted, lineHeight: 22, textAlign: 'center' },
+  webPaymentButton: { width: '100%', maxWidth: 360, marginTop: 18 },
   overlay: { flex: 1, alignItems: 'center', justifyContent: 'center', padding: 22, backgroundColor: 'rgba(15, 23, 42, 0.55)' },
   resultCard: { width: '100%', maxWidth: 360, padding: 24, borderRadius: 19, backgroundColor: '#fff' },
   resultTitle: { color: colors.success, fontSize: 23, fontWeight: '900', textAlign: 'center' },
